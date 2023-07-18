@@ -1,5 +1,6 @@
 DROP DATABASE IF EXISTS SpotifyClone;
 CREATE DATABASE IF NOT EXISTS SpotifyClone;
+USE SpotifyClone;
 
 CREATE TABLE SpotifyClone.subscription(
   sub_id TINYINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
