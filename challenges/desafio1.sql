@@ -1,65 +1,66 @@
 DROP DATABASE IF EXISTS SpotifyClone;
-
 CREATE DATABASE IF NOT EXISTS SpotifyClone;
 
 CREATE TABLE SpotifyClone.subscription(
-  sub_id TINYINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  sub_name NOT NULL ENUM('gratuito', 'familiar', 'universitário', 'pessoal'),
-  sub_price DECIMAL(4,2) UNSIGNED NOT NULL,
+  sub_id TINYINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  sub_name ENUM('gratuito', 'familiar', 'universitário', 'pessoal') NOT NULL,
+  sub_price DECIMAL(4,2) NOT NULL
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.users(
-  user_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_name VARCHAR(100) NOT NULL,
-  age TINYINT UNSIGNED NOT NULL,
-  sub_id TINYINT UNSIGNED NOT NULL,
+  age TINYINT NOT NULL,
+  sub_id TINYINT NOT NULL,
   subscription_date DATE NOT NULL,
-  FOREIGN KEY (sub_id) REFERENCES subscription(sub_id),
+  FOREIGN KEY (sub_id) REFERENCES subscription(sub_id)
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.artists(
-  artist_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  artist_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   artist_name VARCHAR(100) NOT NULL
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.albums(
-  album_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  album_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   album_name VARCHAR(100) NOT NULL,
-  artist_id INT UNSIGNED NOT NULL,
-  release_year YEAR UNSIGNED NOT NULL,
+  artist_id INT NOT NULL,
+  release_year YEAR NOT NULL,
   FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.songs(
-  song_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  song_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   song_name VARCHAR(150) NOT NULL,
-  duration_seconds INT UNSIGNED NOT NULL,
-  album_id INT UNSIGNED NOT NULL,
+  duration_seconds INT NOT NULL,
+  album_id INT NOT NULL,
   FOREIGN KEY (album_id) REFERENCES albums(album_id)
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.playback_history(
-  user_id INT UNSIGNED NOT NULL,
-  song_id INT UNSIGNED NOT NULL,
+  user_id INT NOT NULL,
+  song_id INT NOT NULL,
   playback_date DATETIME NOT NULL,
   PRIMARY KEY (user_id, song_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (song_id) REFERENCES songs(song_id)
+  FOREIGN KEY (song_id) REFERENCES songs(song_id),
+  CONSTRAINT uc_playback UNIQUE (user_id, song_id)
 ) engine = InnoDB;
 
 CREATE TABLE SpotifyClone.following_artists(
-  user_id INT UNSIGNED NOT NULL,
-  artist_id INT UNSIGNED NOT NULL,
+  user_id INT NOT NULL,
+  artist_id INT NOT NULL,
   PRIMARY KEY (user_id, artist_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id),
-  FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+  FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+  CONSTRAINT uc_following UNIQUE (user_id, artist_id)
 ) engine = InnoDB;
 
 INSERT INTO SpotifyClone.subscription (sub_name, sub_price)
 VALUES
   ('gratuito', 0),
   ('familiar', 7.99),
-  ('universitário', 5.99);
+  ('universitário', 5.99),
   ('pessoal', 6.99);
 
 INSERT INTO SpotifyClone.users (user_name, age, sub_id, subscription_date)
