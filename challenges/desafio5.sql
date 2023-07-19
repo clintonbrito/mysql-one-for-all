@@ -3,8 +3,7 @@ SELECT
 	COUNT(ph.song_id) AS reproducoes
 FROM
 	songs AS s
-	INNER JOIN
-    playback_history AS ph ON ph.song_id = s.song_id
+	INNER JOIN playback_history AS ph ON ph.song_id = s.song_id
 GROUP BY
 	cancao
 ORDER BY
